@@ -2,6 +2,8 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'maven-publish'
 
 version = "0.1-SNAPSHOT"
 
@@ -56,5 +58,33 @@ dependencies {
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.github.jrachiele'
+            artifactId 'java-timeseries'
+            version '1.0-SNAPSHOT'
 
+            from components.java
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://~/m2/repository")
+            pom.version = '1.0-SNAPSHOT'
+            pom.artifactId = 'java-timeseries'
+			pom.groupId = 'com.github.jrachiele'
+        }
+    }
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.version = '1.0-SNAPSHOT'
+        pom.artifactId = 'java-timeseries'
+		pom.groupId = 'com.github.jrachiele'
+    }
+}
